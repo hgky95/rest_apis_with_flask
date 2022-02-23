@@ -52,7 +52,7 @@ class UserRegister(Resource):
                         help="This field could not be blank")
 
     def post(self):
-        data = User.parser.parse_args()
+        data = UserRegister.parser.parse_args()
         user_db = User.find_by_username(data['username'])
         if user_db:
             return "{'message': 'User already existed in the db'}", 400
