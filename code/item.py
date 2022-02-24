@@ -7,9 +7,6 @@ from user import User
 
 
 class Item(Resource):
-    # def __init__(self, name, price):
-    #     self.name = name
-    #     self.price = price
 
     parser = reqparse.RequestParser()
     parser.add_argument('price',
@@ -105,4 +102,13 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {'items': items}
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "SELECT * FROM items"
+        result = cursor.execute(query)
+        rows = result.fetchall()
+        items = []
+        for row in rows:
+            items.append({'name': row[0], 'price': row[1]})
+        return items
