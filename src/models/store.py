@@ -2,10 +2,10 @@ from db import db
 
 
 class StoreModel(db.Model):
-    __tablename__ = "stores"
+    __tablename__ = 'stores'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    items = db.relationship('ItemModel', lazy='dynamic')
+    items = db.relationship('ItemModel', back_populates="store", lazy='dynamic')
     #(*) if we dont apply the lazy='dynamic' it will return list of items but poor performance
     # when we create a store, it will load all the item
     #items = db.relationship('ItemModel')
@@ -14,8 +14,8 @@ class StoreModel(db.Model):
         self.name = name
 
     def json(self):
-        #return {'name': self.name, 'price': self.items}
-        return {'name': self.name, 'price': self.items.all()}
+        #return {'name': self.name, 'items': self.items}
+        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
         #because we apply lazy=dynamic -> self.items -> it's a query builder -> we need to load will all() method
         #poor perfomance when parse to json
         # => trade-off (*) when creation store or parse to json.

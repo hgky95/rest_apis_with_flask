@@ -6,6 +6,7 @@ from flask_jwt import JWT
 from resources.user import UserRegister
 from security import authenticate, identity
 from resources.item import Item, ItemList
+from resources.store import Store, StoreList
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -21,6 +22,8 @@ def create_db():
 
 jwt = JWT(app, authenticate, identity)
 
+api.add_resource(Store, '/stores/<string:name>')
+api.add_resource(StoreList, '/stores')
 api.add_resource(Item, '/items/<string:name>')  # ex: 127.0.0.1:5000/items/chair
 api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
