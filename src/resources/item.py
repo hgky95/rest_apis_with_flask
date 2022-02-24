@@ -10,6 +10,10 @@ class Item(Resource):
                         type=float,
                         required=True,
                         help="This field could not be blank")
+    parser.add_argument('store_id',
+                        type=int,
+                        required=True,
+                        help="Item need a store id")
 
     @jwt_required()
     def get(self, name):
@@ -23,7 +27,7 @@ class Item(Resource):
         if item_db:
             return {'message': 'An item is already exist'}, 400
         data = Item.parser.parse_args()
-        item = ItemModel(name, data['price'])
+        item = ItemModel(name, data['price'], data['store_id']) #ItemModel(name, **data)
         try:
             item.save_to_db()
         except:
@@ -42,7 +46,7 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
 
         if item is None:
-            item = ItemModel(name, data['price'])
+            item = ItemModel(name, data['price'], data['store_id']) #ItemModel(name, **data)
         else:
             item.price = data['price']
         item.save_to_db()
