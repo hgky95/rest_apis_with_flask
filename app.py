@@ -1,16 +1,23 @@
-from db import db
-from flask import Flask
-from flask_restful import Api
-from flask_jwt import JWT
+import os
 
-from resources.user import UserRegister
-from security import authenticate, identity
+from flask import Flask
+from flask_jwt import JWT
+from flask_restful import Api
+
+from db import db
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
+from resources.user import UserRegister
+from security import authenticate, identity
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
+
+db_uri = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.secret_key = 'test'
 api = Api(app)
 
