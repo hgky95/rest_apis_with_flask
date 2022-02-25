@@ -7,7 +7,6 @@ class ItemModel(db.Model):
     name = db.Column(db.String(80))
     price = db.Column(db.Float(precision=2))
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))  # stores.id is table_name.column_name
-    store = db.relationship('StoreModel')
     #store = db.relationship('StoreModel', back_populates="items")
 
 
