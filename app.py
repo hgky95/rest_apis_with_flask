@@ -28,6 +28,7 @@ api.add_resource(Item, '/items/<string:name>')  # ex: 127.0.0.1:5000/items/chair
 api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 
-db.init_app(app)
+if __name__ == '__main__':
+    db.init_app(app)
 
 app.run(debug=True)
