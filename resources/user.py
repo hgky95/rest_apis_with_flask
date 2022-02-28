@@ -4,6 +4,7 @@ from models.user import UserModel
 
 
 class UserRegister(Resource):
+
     parser = reqparse.RequestParser()
     parser.add_argument('username',
                         type=str,
@@ -23,3 +24,19 @@ class UserRegister(Resource):
         user_db = UserModel(**data)
         user_db.save_to_db()
         return "{'message': 'User created successfully'}", 201
+
+class User(Resource):
+    @classmethod
+    def get(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {'message': 'User not found'}, 404
+        return user.json()
+
+    @classmethod
+    def delete(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {'message': 'User not found'}, 404
+        UserModel.delete_from_db(user)
+        return {'message': 'User is deleted'}, 200
