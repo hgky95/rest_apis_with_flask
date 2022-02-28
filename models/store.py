@@ -18,7 +18,7 @@ class StoreModel(db.Model):
         # use it when we dont use lazy='dynamic'
         #return {'name': self.name, 'items': self.items}
 
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+        return {'id': self.id, 'name': self.name, 'items': [item.json() for item in self.items.all()]}
         #because we apply lazy=dynamic -> self.items -> it's a query builder -> we need to load will all() method
         #poor perfomance when parse to json
         # => trade-off (*) when creation store or parse to json.
@@ -35,3 +35,7 @@ class StoreModel(db.Model):
     def find_by_name(cls, name):
         item = cls.query.filter_by(name=name).first()
         return item
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
